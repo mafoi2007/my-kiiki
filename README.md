@@ -1,4 +1,4 @@
-# Application de gestion des notes scolaires (Laravel 10)
+# Application de gestion des notes scolaires (RichApp 1.0.0)
 
 Cette application implémente une base fonctionnelle pour un établissement secondaire avec authentification par **login/mot de passe** (sans email), gestion des rôles et modules métiers.
 
