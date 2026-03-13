@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Level;
 use App\Models\SchoolClass;
+use App\Models\Subject;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -11,21 +13,92 @@ class ClassController extends Controller
 {
     public function index(): View
     {
-        return view('classes.index', ['classes' => SchoolClass::latest()->get()]);
+        return view('classes.index', [
+            'classes' => SchoolClass::with(['level', 'students'])->latest()->get(),
+            'levels' => Level::orderBy('name')->get(),
+        ]);
+    }
+
+    public function show(SchoolClass $class): View
+    {
+        $class->load([
+            'level',
+            'subjects',
+            'teacherAssignments.teacher',
+            'teacherAssignments.subject',
+        ]);
+
+        return view('classes.show', [
+            'class' => $class,
+            'subjects' => Subject::orderBy('name')->get(),
+        ]);
     }
 
     public function store(Request $request): RedirectResponse
     {
-        $data = $request->validate(['name' => ['required', 'string', 'max:255', 'unique:school_classes,name']]);
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:50', 'unique:school_classes,code'],
+            'level_id' => ['required', 'exists:levels,id'],
+        ]);
+
         SchoolClass::create($data);
 
         return back()->with('success', 'Classe créée.');
     }
 
+    public function update(Request $request, SchoolClass $class): RedirectResponse
+    {
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'code' => ['required', 'string', 'max:50', 'unique:school_classes,code,'.$class->id],
+            'level_id' => ['required', 'exists:levels,id'],
+        ]);
+
+        $class->update($data);
+
+        return back()->with('success', 'Classe mise à jour.');
+    }
+
     public function destroy(SchoolClass $class): RedirectResponse
     {
+        if ($class->students()->exists()) {
+            return back()->withErrors(['class' => 'Impossible de supprimer cette classe car elle contient déjà des élèves.']);
+        }
+    
         $class->delete();
 
         return back()->with('success', 'Classe supprimée.');
+    }
+
+    public function assignSubject(Request $request, SchoolClass $class): RedirectResponse
+    {
+        $data = $request->validate([
+            'subject_id' => ['required', 'exists:subjects,id'],
+            'coefficient' => ['required', 'integer', 'min:1', 'max:20'],
+        ]);
+
+        $class->subjects()->syncWithoutDetaching([
+            $data['subject_id'] => ['coefficient' => $data['coefficient']],
+        ]);
+
+        return back()->with('success', 'Matière affectée à la classe.');
+    }
+
+    public function detachSubject(SchoolClass $class, Subject $subject): RedirectResponse
+    {
+        $class->subjects()->detach($subject->id);
+
+        return back()->with('success', 'Matière retirée de la classe.');
+    }
+
+    public function teachersPdf(SchoolClass $class): View
+    {
+        $class->load(['teacherAssignments.teacher', 'teacherAssignments.subject', 'level']);
+
+        return view('classes.teachers-pdf', [
+            'class' => $class,
+            'assignments' => $class->teacherAssignments,
+        ]);
     }
 }

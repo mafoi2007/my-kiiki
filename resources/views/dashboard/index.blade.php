@@ -21,6 +21,7 @@
         <div class="d-flex flex-wrap gap-2">
             @if(auth()->user()->isRole('cellule_informatique'))
                 <a class="btn btn-primary" href="{{ route('classes.index') }}">Classes</a>
+                <a class="btn btn-primary" href="{{ route('levels.index') }}">Niveaux</a>
                 <a class="btn btn-primary" href="{{ route('subjects.index') }}">Matières</a>
                 <a class="btn btn-primary" href="{{ route('users.index') }}">Utilisateurs</a>
                 <a class="btn btn-primary" href="{{ route('students.index') }}">Élèves</a>
