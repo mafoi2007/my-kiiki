@@ -10,7 +10,20 @@ class Student extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['matricule', 'full_name', 'school_class_id', 'active'];
+    protected $fillable = [
+        'matricule',
+        'school_matricule',
+        'full_name',
+        'birth_date',
+        'birth_place',
+        'school_class_id',
+        'status',
+        'sex',
+        'father_name',
+        'mother_name',
+        'photo_path',
+        'active',
+    ];
 
     public function schoolClass(): BelongsTo
     {

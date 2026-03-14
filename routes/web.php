@@ -48,6 +48,7 @@ Route::middleware('auth')->group(function (): void {
 
         Route::get('/eleves', [StudentController::class, 'index'])->name('students.index');
         Route::post('/eleves', [StudentController::class, 'store'])->name('students.store');
+        Route::delete('/eleves/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
     });
 
     Route::middleware('role:parent')->get('/messages', [MessageController::class, 'index'])->name('messages.index'); 
