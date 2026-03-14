@@ -28,6 +28,7 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/classes/{class}', [ClassController::class, 'show'])->name('classes.show');
         Route::post('/classes/{class}/matieres', [ClassController::class, 'assignSubject'])->name('classes.subjects.assign');
         Route::delete('/classes/{class}/matieres/{subject}', [ClassController::class, 'detachSubject'])->name('classes.subjects.detach');
+        Route::post('/classes/{class}/enseignants', [ClassController::class, 'assignTeacher'])->name('classes.teachers.assign');
         Route::get('/classes/{class}/enseignants/pdf', [ClassController::class, 'teachersPdf'])->name('classes.teachers.pdf');
 
         Route::get('/niveaux', [LevelController::class, 'index'])->name('levels.index');
