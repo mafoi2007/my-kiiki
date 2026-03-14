@@ -21,9 +21,20 @@
 </nav>
 <div class="container py-4">
     @if(session('success'))
-        <div class="alert alert-success">{{ session('success') }}</div>
+        <div class="alert alert-success" data-auto-dismiss="5000">{{ session('success') }}</div>
     @endif
     @yield('content')
 </div>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('[data-auto-dismiss]').forEach((alertElement) => {
+            const timeout = Number(alertElement.dataset.autoDismiss) || 5000;
+
+            window.setTimeout(() => {
+                alertElement.remove();
+            }, timeout);
+        });
+    });
+</script>
 </body>
 </html>
