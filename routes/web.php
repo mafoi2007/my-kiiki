@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\StudentController;
@@ -36,6 +37,10 @@ Route::middleware('auth')->group(function (): void {
         Route::get('/matieres', [SubjectController::class, 'index'])->name('subjects.index');
         Route::post('/matieres', [SubjectController::class, 'store'])->name('subjects.store');
         Route::delete('/matieres/{subject}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
+
+        Route::get('/groupes', [GroupController::class, 'index'])->name('groups.index');
+        Route::post('/groupes', [GroupController::class, 'store'])->name('groups.store');
+        Route::delete('/groupes/{group}', [GroupController::class, 'destroy'])->name('groups.destroy');
 
         Route::get('/utilisateurs', [UserController::class, 'index'])->name('users.index');
         Route::post('/utilisateurs', [UserController::class, 'store'])->name('users.store');

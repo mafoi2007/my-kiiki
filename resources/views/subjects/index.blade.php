@@ -1,6 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+@if ($errors->any())
+    <div class="alert alert-danger"><ul class="mb-0">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>
+@endif
 <div class="row g-4">
     <div class="col-md-4">
         <div class="card shadow-sm"><div class="card-body">

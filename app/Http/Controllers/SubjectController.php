@@ -16,7 +16,12 @@ class SubjectController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $data = $request->validate(['name' => ['required', 'string', 'max:255', 'unique:subjects,name']]);
+        $data = $request->validate(['name' => ['required', 'string', 'max:255']]);
+
+        if (Subject::where('name', $data['name'])->exists()) {
+            return back()->withErrors(['name' => 'Cette matière a déjà été créée.'])->withInput();
+        }
+
         Subject::create($data);
 
         return back()->with('success', 'Matière créée.');

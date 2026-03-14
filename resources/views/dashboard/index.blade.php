@@ -23,6 +23,7 @@
                 <a class="btn btn-primary" href="{{ route('classes.index') }}">Classes</a>
                 <a class="btn btn-primary" href="{{ route('levels.index') }}">Niveaux</a>
                 <a class="btn btn-primary" href="{{ route('subjects.index') }}">Matières</a>
+                 <a class="btn btn-primary" href="{{ route('groups.index') }}">Groupes</a>
                 <a class="btn btn-primary" href="{{ route('users.index') }}">Utilisateurs</a>
                 <a class="btn btn-primary" href="{{ route('students.index') }}">Élèves</a>
             @endif

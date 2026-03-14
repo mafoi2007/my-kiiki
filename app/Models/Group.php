@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-class Subject extends Model
+class Group extends Model
 {
     use HasFactory;
 
@@ -14,6 +14,8 @@ class Subject extends Model
 
     public function classes(): BelongsToMany
     {
-       return $this->belongsToMany(SchoolClass::class)->withPivot(['coefficient', 'group_id'])->withTimestamps();
+        return $this->belongsToMany(SchoolClass::class, 'school_class_subject')
+            ->withPivot(['subject_id', 'coefficient'])
+            ->withTimestamps();
     }
 }

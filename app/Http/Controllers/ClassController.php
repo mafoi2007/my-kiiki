@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Level;
 use App\Models\SchoolClass;
 use App\Models\Subject;
+use App\Models\Group;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -31,6 +32,7 @@ class ClassController extends Controller
         return view('classes.show', [
             'class' => $class,
             'subjects' => Subject::orderBy('name')->get(),
+            'groups' => Group::orderBy('name')->get(),
         ]);
     }
 
@@ -76,10 +78,18 @@ class ClassController extends Controller
         $data = $request->validate([
             'subject_id' => ['required', 'exists:subjects,id'],
             'coefficient' => ['required', 'integer', 'min:1', 'max:20'],
+            'group_id' => ['required', 'exists:groups,id'],
         ]);
+        
+        if ($class->subjects()->where('subjects.id', $data['subject_id'])->exists()) {
+            return back()->withErrors(['subject_id' => 'Cette matière a déjà été ajoutée à la classe.'])->withInput();
+        }
 
         $class->subjects()->syncWithoutDetaching([
-            $data['subject_id'] => ['coefficient' => $data['coefficient']],
+            $data['subject_id'] => [
+                'coefficient' => $data['coefficient'],
+                'group_id' => $data['group_id'],
+            ],
         ]);
 
         return back()->with('success', 'Matière affectée à la classe.');

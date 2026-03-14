@@ -3,7 +3,10 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0">Gestion des classes</h4>
-    <a class="btn btn-outline-primary" href="{{ route('levels.index') }}">Gérer les niveaux</a>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-primary" href="{{ route('levels.index') }}">Gérer les niveaux</a>
+        <a class="btn btn-outline-primary" href="{{ route('groups.index') }}">Gérer les groupes</a>
+    </div>
 </div>
 
 @if ($errors->any())

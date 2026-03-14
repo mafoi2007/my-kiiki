@@ -21,6 +21,12 @@
                         <option value="{{ $subject->id }}">{{ $subject->name }}</option>
                     @endforeach
                 </select>
+                <select name="group_id" class="form-select mb-2" required>
+                    <option value="">Choisir un groupe</option>
+                    @foreach($groups as $group)
+                        <option value="{{ $group->id }}">{{ $group->name }}</option>
+                    @endforeach
+                </select>
                 <input type="number" min="1" max="20" name="coefficient" class="form-control mb-2" placeholder="Coefficient" required>
                 <button class="btn btn-primary">Affecter</button>
             </form>
@@ -34,6 +40,7 @@
                 @forelse($class->subjects as $subject)
                     <tr>
                         <td>{{ $subject->name }}</td>
+                        <td>Groupe {{ optional($groups->firstWhere('id', $subject->pivot->group_id))->name }}</td>
                         <td>Coef. {{ $subject->pivot->coefficient }}</td>
                         <td class="text-end">
                             <form method="post" action="{{ route('classes.subjects.detach', [$class, $subject]) }}">@csrf @method('delete')
@@ -42,7 +49,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="3" class="text-muted">Aucune matière affectée.</td></tr>
+                    <tr><td colspan="4" class="text-muted">Aucune matière affectée.</td></tr>
                 @endforelse
             </table>
         </div></div>

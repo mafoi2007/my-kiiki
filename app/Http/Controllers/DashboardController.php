@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\SchoolClass;
+use App\Models\Group;
 use App\Models\Student;
 use App\Models\Subject;
 use App\Models\User;
@@ -17,6 +18,7 @@ class DashboardController extends Controller
                 'Utilisateurs' => User::count(),
                 'Classes' => SchoolClass::count(),
                 'Matières' => Subject::count(),
+                'Groupes' => Group::count(),
                 'Élèves' => Student::count(),
             ],
         ]);

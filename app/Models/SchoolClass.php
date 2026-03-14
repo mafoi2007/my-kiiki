@@ -26,7 +26,7 @@ class SchoolClass extends Model
 
     public function subjects(): BelongsToMany
     {
-        return $this->belongsToMany(Subject::class)->withPivot('coefficient')->withTimestamps();
+        return $this->belongsToMany(Subject::class)->withPivot(['coefficient', 'group_id'])->withTimestamps();
     }
 
     public function teacherAssignments(): HasMany
