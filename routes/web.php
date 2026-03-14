@@ -31,8 +31,8 @@ Route::middleware('auth')->group(function (): void {
 
         Route::get('/niveaux', [LevelController::class, 'index'])->name('levels.index');
         Route::post('/niveaux', [LevelController::class, 'store'])->name('levels.store');
+        Route::put('/niveaux/{level}', [LevelController::class, 'update'])->name('levels.update');
         Route::delete('/niveaux/{level}', [LevelController::class, 'destroy'])->name('levels.destroy');
-
         Route::get('/matieres', [SubjectController::class, 'index'])->name('subjects.index');
         Route::post('/matieres', [SubjectController::class, 'store'])->name('subjects.store');
         Route::delete('/matieres/{subject}', [SubjectController::class, 'destroy'])->name('subjects.destroy');

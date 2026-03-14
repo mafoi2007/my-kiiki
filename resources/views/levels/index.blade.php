@@ -53,13 +53,26 @@
                             <tr>
                                 <th scope="col">Niveau</th>
                                 <th scope="col">Nombre de classes</th>
-                                <th scope="col" class="text-end">Action</th>
+                                <th scope="col" class="text-end">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             @forelse($levels as $level)
                                 <tr>
-                                    <td>{{ $level->name }}</td>
+                                    <td>
+                                        <form method="post" action="{{ route('levels.update', $level) }}" class="d-flex gap-2">
+                                            @csrf
+                                            @method('put')
+                                            <input
+                                                type="text"
+                                                name="name"
+                                                class="form-control form-control-sm"
+                                                value="{{ $level->name }}"
+                                                required
+                                            >
+                                            <button class="btn btn-sm btn-outline-primary" type="submit">Modifier</button>
+                                        </form>
+                                    </td>
                                     <td>{{ $level->classes_count }}</td>
                                     <td class="text-end">
                                         <form method="post" action="{{ route('levels.destroy', $level) }}" class="d-inline">
