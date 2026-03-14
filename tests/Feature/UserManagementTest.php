@@ -4,13 +4,14 @@ namespace Tests\Feature;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class UserManagementTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_teacher_password_must_have_at_least_8_characters(): void
+   public function test_teacher_can_be_created_without_password_and_gets_default_password(): void
     {
         $admin = User::factory()->create(['role' => 'cellule_informatique']);
 
@@ -18,25 +19,31 @@ class UserManagementTest extends TestCase
             'name' => 'Prof Test',
             'login' => 'prof_test',
             'role' => 'enseignant',
-            'password' => '1234567',
-        ]);
-
-        $response->assertSessionHasErrors('password');
-        $this->assertDatabaseMissing('users', ['login' => 'prof_test']);
-    }
-
-    public function test_non_teacher_password_can_have_6_characters(): void
-    {
-        $admin = User::factory()->create(['role' => 'cellule_informatique']);
-
-        $response = $this->actingAs($admin)->post(route('users.store'), [
-            'name' => 'Parent Test',
-            'login' => 'parent_test',
-            'role' => 'parent',
-            'password' => '123456',
+            'password' => '',
         ]);
 
         $response->assertSessionHasNoErrors();
-        $this->assertDatabaseHas('users', ['login' => 'parent_test', 'role' => 'parent']);
+
+        $teacher = User::where('login', 'prof_test')->firstOrFail();
+        $this->assertTrue(Hash::check('prof_test@1234', $teacher->password));
+        $this->assertTrue($teacher->must_change_password);
+    }
+
+    public function test_cellule_informatique_can_reset_password_to_default_format(): void
+    {
+        $admin = User::factory()->create(['role' => 'cellule_informatique']);
+        $teacher = User::factory()->create([
+            'role' => 'enseignant',
+            'login' => 'ens_amine',
+            'must_change_password' => false,
+        ]);
+
+        $response = $this->actingAs($admin)->post(route('users.password.reset', $teacher));
+
+        $response->assertSessionHasNoErrors();
+        
+         $teacher->refresh();
+        $this->assertTrue(Hash::check('ens_amine@1234', $teacher->password));
+        $this->assertTrue($teacher->must_change_password);
     }
 }

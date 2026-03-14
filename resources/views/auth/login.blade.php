@@ -8,23 +8,27 @@
 </head>
 <body class="bg-body-tertiary">
 <div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow-sm">
-                <div class="card-body p-4">
-                    <h4 class="mb-3">Connexion à la plateforme</h4>
-                    <form method="post" action="{{ route('login.attempt') }}">
+    <div class="row justify-content-center align-items-center min-vh-100 py-4">
+        <div class="col-lg-5 col-md-7">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-primary text-white py-4">
+                    <h4 class="mb-1">Connexion à la plateforme</h4>
+                    <small class="opacity-75">Gestion scolaire - Secondaire Notes</small>
+                </div>
+                <div class="card-body p-4 p-lg-5">
+                    <form method="post" action="{{ route('login.attempt') }}" class="vstack gap-3">
                         @csrf
-                        <div class="mb-3">
+                        <div>
                             <label class="form-label">Login</label>
-                            <input type="text" class="form-control" name="login" value="{{ old('login') }}" required>
-                            @error('login') <div class="text-danger small">{{ $message }}</div> @enderror
+                             <input type="text" class="form-control form-control-lg" name="login" value="{{ old('login') }}" required>
+                            @error('login') <div class="text-danger small mt-1">{{ $message }}</div> @enderror
                         </div>
-                        <div class="mb-3">
+                         <div>
                             <label class="form-label">Mot de passe</label>
-                            <input type="password" class="form-control" name="password" required>
+                             <input type="password" class="form-control form-control-lg" name="password" required>
                         </div>
-                        <button class="btn btn-primary w-100">Se connecter</button>
+                        </div>
+                        <button class="btn btn-primary btn-lg w-100">Se connecter</button>
                     </form>
                 </div>
             </div>

@@ -18,8 +18,8 @@
         }
     </style>
 </head>
-<body class="bg-light">
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<body class="bg-body-tertiary">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{{ route('dashboard') }}">Secondaire Notes</a>
         <div class="ms-auto d-flex gap-2 align-items-center text-white">
@@ -33,8 +33,22 @@
 </nav>
 <div class="container py-4">
     @if(session('success'))
-        <div class="alert alert-success" data-auto-dismiss="5000">{{ session('success') }}</div>
+        <div class="alert alert-success alert-dismissible fade show" role="alert" data-auto-dismiss="5000">
+            {{ session('success') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
     @endif
+    
+    @if($errors->any())
+        <div class="alert alert-danger">
+            <ul class="mb-0">
+                @foreach($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+    
     @yield('content')
 </div>
 <script>
@@ -70,5 +84,6 @@
         });
     });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

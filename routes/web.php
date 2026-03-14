@@ -16,9 +16,12 @@ Route::middleware('guest')->group(function (): void {
     Route::post('/login', [AuthController::class, 'login'])->name('login.attempt');
 });
 
-Route::middleware('auth')->group(function (): void {
+Route::middleware(['auth', 'force_password_change'])->group(function (): void {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::get('/dashboard', DashboardController::class)->name('dashboard');
+
+    Route::get('/mot-de-passe/modifier', [AuthController::class, 'showPasswordChangeForm'])->name('password.change.form');
+    Route::post('/mot-de-passe/modifier', [AuthController::class, 'changePassword'])->name('password.change.update');
 
     Route::middleware('role:cellule_informatique')->group(function (): void {
         Route::get('/classes', [ClassController::class, 'index'])->name('classes.index');
@@ -45,6 +48,7 @@ Route::middleware('auth')->group(function (): void {
 
         Route::get('/utilisateurs', [UserController::class, 'index'])->name('users.index');
         Route::post('/utilisateurs', [UserController::class, 'store'])->name('users.store');
+        Route::post('/utilisateurs/{user}/reinitialiser-mot-de-passe', [UserController::class, 'resetPassword'])->name('users.password.reset');
 
         Route::get('/eleves', [StudentController::class, 'index'])->name('students.index');
         Route::post('/eleves', [StudentController::class, 'store'])->name('students.store');

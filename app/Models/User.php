@@ -27,6 +27,7 @@ class User extends Authenticatable
        'login',
         'role',
         'password',
+        'must_change_password',
     ];
      
     protected $hidden = [
@@ -36,7 +37,13 @@ class User extends Authenticatable
 
     protected $casts = [
         'password' => 'hashed',
+        'must_change_password' => 'boolean',
     ];
+
+    public function defaultPassword(): string
+    {
+        return $this->login . '@1234';
+    }
 
     public function isRole(string ...$roles): bool
     {

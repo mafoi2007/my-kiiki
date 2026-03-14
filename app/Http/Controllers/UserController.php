@@ -18,20 +18,43 @@ class UserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
-        $passwordRules = ['required', 'string', 'min:6'];
-        if ($request->input('role') === 'enseignant') {
-            $passwordRules = ['required', 'string', 'min:8'];
-        }
-
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'login' => ['required', 'string', 'max:100', 'alpha_dash', 'unique:users,login'],
             'role' => ['required', Rule::in(User::ROLES)],
-            'password' => $passwordRules,
+            'password' => ['nullable', 'string', 'min:8'],
         ]);
-        $data['password'] = Hash::make($data['password']);
+        
+        $defaultPassword = $data['login'] . '@1234';
+        $rawPassword = $data['password'] ?: $defaultPassword;
+
+        if (($data['password'] ?? null) === null) {
+            unset($data['password']);
+        }
+
+        $data['password'] = Hash::make($rawPassword);
+        $data['must_change_password'] = in_array($data['role'], [
+            'chef_etablissement',
+            'censeur',
+            'surveillant_general',
+            'econome',
+            'enseignant',
+        ], true);
+
         User::create($data);
 
-        return back()->with('success', 'Utilisateur créé.');
+        return back()->with('success', 'Utilisateur créé. Mot de passe initial: ' . $rawPassword);
+    }
+
+    public function resetPassword(User $user): RedirectResponse
+    {
+        $defaultPassword = $user->defaultPassword();
+
+        $user->forceFill([
+            'password' => Hash::make($defaultPassword),
+            'must_change_password' => true,
+        ])->save();
+
+        return back()->with('success', 'Mot de passe réinitialisé pour ' . $user->login . ' : ' . $defaultPassword); 
     }
 }
