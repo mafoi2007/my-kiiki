@@ -91,4 +91,92 @@ class ClassManagementTest extends TestCase
         $response->assertSessionHasErrors('subject_id');
         $this->assertDatabaseCount('school_class_subject', 1);
     }
+
+    public function test_teacher_can_be_assigned_only_to_subjects_of_the_class(): void
+    {
+        $admin = User::factory()->create(['role' => 'cellule_informatique']);
+        $teacher = User::factory()->create(['role' => 'enseignant']);
+        $level = Level::create(['name' => '3eme']);
+        $class = SchoolClass::create([
+            'name' => '3e A',
+            'code' => '3A',
+            'level_id' => $level->id,
+        ]);
+        $subject = Subject::create(['name' => 'Physique']);
+
+        $response = $this->actingAs($admin)->post(route('classes.teachers.assign', $class), [
+            'teacher_id' => $teacher->id,
+            'subject_id' => $subject->id,
+        ]);
+
+        $response->assertSessionHasErrors('subject_id');
+        $this->assertDatabaseCount('teacher_assignments', 0);
+    }
+
+    public function test_assigning_teacher_to_same_subject_replaces_previous_assignment(): void
+    {
+        $admin = User::factory()->create(['role' => 'cellule_informatique']);
+        $teacherOne = User::factory()->create(['role' => 'enseignant']);
+        $teacherTwo = User::factory()->create(['role' => 'enseignant']);
+        $level = Level::create(['name' => '2nde']);
+        $class = SchoolClass::create([
+            'name' => '2nde C',
+            'code' => '2C',
+            'level_id' => $level->id,
+        ]);
+        $subject = Subject::create(['name' => 'Français']);
+        $group = Group::create(['name' => 'Langues']);
+
+        $this->actingAs($admin)->post(route('classes.subjects.assign', $class), [
+            'subject_id' => $subject->id,
+            'coefficient' => 2,
+            'group_id' => $group->id,
+        ])->assertSessionHasNoErrors();
+
+        $this->actingAs($admin)->post(route('classes.teachers.assign', $class), [
+            'teacher_id' => $teacherOne->id,
+            'subject_id' => $subject->id,
+        ])->assertSessionHasNoErrors();
+
+        $response = $this->actingAs($admin)->post(route('classes.teachers.assign', $class), [
+            'teacher_id' => $teacherTwo->id,
+            'subject_id' => $subject->id,
+        ]);
+
+        $response->assertSessionHasNoErrors();
+        $this->assertDatabaseCount('teacher_assignments', 1);
+        $this->assertDatabaseHas('teacher_assignments', [
+            'school_class_id' => $class->id,
+            'subject_id' => $subject->id,
+            'teacher_id' => $teacherTwo->id,
+        ]);
+    }
+
+    public function test_non_teacher_user_cannot_be_assigned_to_subject(): void
+    {
+        $admin = User::factory()->create(['role' => 'cellule_informatique']);
+        $parent = User::factory()->create(['role' => 'parent']);
+        $level = Level::create(['name' => '1ere']);
+        $class = SchoolClass::create([
+            'name' => '1ere B',
+            'code' => '1B',
+            'level_id' => $level->id,
+        ]);
+        $subject = Subject::create(['name' => 'Philosophie']);
+        $group = Group::create(['name' => 'Humanités']);
+
+        $this->actingAs($admin)->post(route('classes.subjects.assign', $class), [
+            'subject_id' => $subject->id,
+            'coefficient' => 3,
+            'group_id' => $group->id,
+        ])->assertSessionHasNoErrors();
+
+        $response = $this->actingAs($admin)->post(route('classes.teachers.assign', $class), [
+            'teacher_id' => $parent->id,
+            'subject_id' => $subject->id,
+        ]);
+
+        $response->assertSessionHasErrors('teacher_id');
+        $this->assertDatabaseCount('teacher_assignments', 0);
+    }
 }

@@ -18,11 +18,16 @@ class UserController extends Controller
 
     public function store(Request $request): RedirectResponse
     {
+        $passwordRules = ['required', 'string', 'min:6'];
+        if ($request->input('role') === 'enseignant') {
+            $passwordRules = ['required', 'string', 'min:8'];
+        }
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'login' => ['required', 'string', 'max:100', 'alpha_dash', 'unique:users,login'],
             'role' => ['required', Rule::in(User::ROLES)],
-            'password' => ['required', 'string', 'min:6'],
+            'password' => $passwordRules,
         ]);
         $data['password'] = Hash::make($data['password']);
         User::create($data);

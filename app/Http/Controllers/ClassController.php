@@ -6,6 +6,9 @@ use App\Models\Level;
 use App\Models\SchoolClass;
 use App\Models\Subject;
 use App\Models\Group;
+use App\Models\TeacherAssignment;
+use App\Models\User;
+
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -32,6 +35,7 @@ class ClassController extends Controller
         return view('classes.show', [
             'class' => $class,
             'subjects' => Subject::orderBy('name')->get(),
+            'teachers' => User::where('role', 'enseignant')->orderBy('name')->get(),
             'groups' => Group::orderBy('name')->get(),
         ]);
     }
@@ -72,7 +76,6 @@ class ClassController extends Controller
 
         return back()->with('success', 'Classe supprimée.');
     }
-
     public function assignSubject(Request $request, SchoolClass $class): RedirectResponse
     {
         $data = $request->validate([
@@ -97,9 +100,37 @@ class ClassController extends Controller
 
     public function detachSubject(SchoolClass $class, Subject $subject): RedirectResponse
     {
+        $class->teacherAssignments()->where('subject_id', $subject->id)->delete();
         $class->subjects()->detach($subject->id);
 
         return back()->with('success', 'Matière retirée de la classe.');
+    }
+
+    public function assignTeacher(Request $request, SchoolClass $class): RedirectResponse
+    {
+        $data = $request->validate([
+            'teacher_id' => ['required', 'exists:users,id'],
+            'subject_id' => ['required', 'exists:subjects,id'],
+        ]);
+
+        if (! $class->subjects()->where('subjects.id', $data['subject_id'])->exists()) {
+            return back()->withErrors(['subject_id' => 'Cette matière doit d\'abord être affectée à la classe.'])->withInput();
+        }
+
+        $teacher = User::findOrFail($data['teacher_id']);
+        if ($teacher->role !== 'enseignant') {
+            return back()->withErrors(['teacher_id' => 'L\'utilisateur sélectionné n\'est pas un enseignant.'])->withInput();
+        }
+
+        TeacherAssignment::updateOrCreate(
+            [
+                'school_class_id' => $class->id,
+                'subject_id' => $data['subject_id'],
+            ],
+            ['teacher_id' => $data['teacher_id']]
+        );
+
+        return back()->with('success', 'Enseignant assigné à la matière.');
     }
 
     public function teachersPdf(SchoolClass $class): View

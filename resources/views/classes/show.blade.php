@@ -61,6 +61,27 @@
                 <h5>Enseignants intervenant dans cette classe</h5>
                 <a class="btn btn-sm btn-outline-primary" href="{{ route('classes.teachers.pdf', $class) }}">Exporter PDF</a>
             </div>
+            <form method="post" action="{{ route('classes.teachers.assign', $class) }}" class="row g-2 mt-2">@csrf
+                <div class="col-md-5">
+                    <select name="teacher_id" class="form-select" required>
+                        <option value="">Choisir un enseignant</option>
+                        @foreach($teachers as $teacher)
+                            <option value="{{ $teacher->id }}">{{ $teacher->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <select name="subject_id" class="form-select" required>
+                        <option value="">Choisir une matière de la classe</option>
+                        @foreach($class->subjects as $subject)
+                            <option value="{{ $subject->id }}">{{ $subject->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-md-2 d-grid">
+                    <button class="btn btn-primary">Assigner</button>
+                </div>
+            </form>
             <table class="table mt-3">
                 <tr><th>Enseignant</th><th>Matière</th></tr>
                 @forelse($class->teacherAssignments as $assignment)
