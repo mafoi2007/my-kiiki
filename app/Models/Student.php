@@ -10,6 +10,11 @@ class Student extends Model
 {
     use HasFactory;
 
+
+     protected $casts = [
+        'birth_date' => 'date',
+        'active' => 'boolean',
+    ];
     protected $fillable = [
         'matricule',
         'school_matricule',

@@ -57,6 +57,9 @@ Route::middleware(['auth', 'force_password_change'])->group(function (): void {
         
         Route::get('/eleves', [StudentController::class, 'index'])->name('students.index');
         Route::post('/eleves', [StudentController::class, 'store'])->name('students.store');
+        Route::put('/eleves/{student}', [StudentController::class, 'update'])->name('students.update');
+        Route::put('/eleves/{student}/changer-classe', [StudentController::class, 'moveClass'])->name('students.move-class');
+        Route::get('/eleves/classes/{class}/pdf', [StudentController::class, 'classStudentsPdf'])->name('students.class.pdf');
         Route::delete('/eleves/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
     });
 
