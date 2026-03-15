@@ -36,7 +36,7 @@ class LevelController extends Controller
         return back()->with('success', 'Niveau supprimé.');
     }
 
-     public function update(Request $request, Level $level): RedirectResponse
+    public function update(Request $request, Level $level): RedirectResponse
     {
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100', 'unique:levels,name,'.$level->id],
@@ -45,6 +45,11 @@ class LevelController extends Controller
         $level->update($data);
 
         return back()->with('success', 'Niveau mis à jour.');
+    }
+
+    public function pdf(): View
+    {
+        return view('levels.pdf', ['levels' => Level::withCount('classes')->orderBy('name')->get()]);
     }
 
 }

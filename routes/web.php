@@ -35,11 +35,13 @@ Route::middleware(['auth', 'force_password_change'])->group(function (): void {
         Route::get('/classes/{class}/enseignants/pdf', [ClassController::class, 'teachersPdf'])->name('classes.teachers.pdf');
 
         Route::get('/niveaux', [LevelController::class, 'index'])->name('levels.index');
+        Route::get('/niveaux/pdf', [LevelController::class, 'pdf'])->name('levels.pdf');
         Route::post('/niveaux', [LevelController::class, 'store'])->name('levels.store');
         Route::put('/niveaux/{level}', [LevelController::class, 'update'])->name('levels.update');
         Route::delete('/niveaux/{level}', [LevelController::class, 'destroy'])->name('levels.destroy');
         Route::get('/matieres', [SubjectController::class, 'index'])->name('subjects.index');
         Route::post('/matieres', [SubjectController::class, 'store'])->name('subjects.store');
+        Route::put('/matieres/{subject}', [SubjectController::class, 'update'])->name('subjects.update');
         Route::delete('/matieres/{subject}', [SubjectController::class, 'destroy'])->name('subjects.destroy');
 
         Route::get('/groupes', [GroupController::class, 'index'])->name('groups.index');

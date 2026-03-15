@@ -37,6 +37,26 @@ class ClassManagementTest extends TestCase
         $this->assertDatabaseHas('school_classes', ['id' => $class->id]);
     }
 
+    public function test_class_with_assigned_subjects_cannot_be_deleted(): void
+    {
+        $admin = User::factory()->create(['role' => 'cellule_informatique']);
+        $level = Level::create(['name' => '6eme']);
+        $class = SchoolClass::create([
+            'name' => '6e A',
+            'code' => '6A',
+            'level_id' => $level->id,
+        ]);
+        $subject = Subject::create(['name' => 'Math']);
+        $group = Group::create(['name' => 'Scientifique']);
+
+        $class->subjects()->attach($subject->id, ['coefficient' => 4, 'group_id' => $group->id]);
+
+        $response = $this->actingAs($admin)->delete(route('classes.destroy', $class));
+
+        $response->assertSessionHasErrors('class');
+        $this->assertDatabaseHas('school_classes', ['id' => $class->id]);
+    }
+
     public function test_subject_can_be_assigned_with_coefficient_to_class(): void
     {
         $admin = User::factory()->create(['role' => 'cellule_informatique']);

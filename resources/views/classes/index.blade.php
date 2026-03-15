@@ -4,6 +4,7 @@
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0">Gestion des classes</h4>
     <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" href="{{ route('dashboard') }}">Retour au menu principal</a>
         <a class="btn btn-outline-primary" href="{{ route('levels.index') }}">Gérer les niveaux</a>
         <a class="btn btn-outline-primary" href="{{ route('groups.index') }}">Gérer les groupes</a>
     </div>
@@ -50,7 +51,7 @@
                     <td class="text-end d-flex gap-2 justify-content-end">
                         <a class="btn btn-sm btn-outline-secondary" href="{{ route('classes.show', $class) }}">Gérer</a>
                         <form method="post" action="{{ route('classes.destroy', $class) }}">@csrf @method('delete')
-                            <button class="btn btn-sm btn-outline-danger" @disabled($class->students->isNotEmpty())>Supprimer</button>
+                            <button class="btn btn-sm btn-outline-danger" @disabled($class->students->isNotEmpty() || $class->subjects_count > 0)>Supprimer</button>
                         </form>
                     </td>
                 </tr>

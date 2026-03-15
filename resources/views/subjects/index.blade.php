@@ -1,6 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Gestion des matières</h4>
+    <a class="btn btn-outline-secondary" href="{{ route('dashboard') }}">Retour au menu principal</a>
+</div>
+
 @if ($errors->any())
     <div class="alert alert-danger"><ul class="mb-0">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>
 @endif
@@ -19,11 +24,21 @@
             <h5>Liste des matières</h5>
             <table class="table">
                 @foreach($subjects as $subject)
-                <tr><td>{{ $subject->name }}</td><td class="text-end">
-                    <form method="post" action="{{ route('subjects.destroy', $subject) }}">@csrf @method('delete')
-                        <button class="btn btn-sm btn-outline-danger">Supprimer</button>
-                    </form>
-                </td></tr>
+                <tr>
+                    <td>
+                        <form method="post" action="{{ route('subjects.update', $subject) }}" class="d-flex gap-2">
+                            @csrf
+                            @method('put')
+                            <input name="name" class="form-control form-control-sm" value="{{ $subject->name }}" required>
+                            <button class="btn btn-sm btn-outline-primary">Modifier</button>
+                        </form>
+                    </td>
+                    <td class="text-end">
+                        <form method="post" action="{{ route('subjects.destroy', $subject) }}">@csrf @method('delete')
+                            <button class="btn btn-sm btn-outline-danger" @disabled($subject->classes_count > 0)>Supprimer</button>
+                        </form>
+                    </td>
+                </tr>
                 @endforeach
             </table>
         </div></div>

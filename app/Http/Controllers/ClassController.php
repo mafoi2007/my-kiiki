@@ -18,7 +18,7 @@ class ClassController extends Controller
     public function index(): View
     {
         return view('classes.index', [
-            'classes' => SchoolClass::with(['level', 'students'])->latest()->get(),
+            'classes' => SchoolClass::with(['level', 'students'])->withCount('subjects')->latest()->get(),
             'levels' => Level::orderBy('name')->get(),
         ]);
     }
@@ -72,6 +72,10 @@ class ClassController extends Controller
             return back()->withErrors(['class' => 'Impossible de supprimer cette classe car elle contient déjà des élèves.']);
         }
     
+        if ($class->subjects()->exists()) {
+            return back()->withErrors(['class' => 'Impossible de supprimer cette classe car des matières y sont déjà attribuées.']);
+        }
+
         $class->delete();
 
         return back()->with('success', 'Classe supprimée.');

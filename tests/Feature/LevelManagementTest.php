@@ -63,4 +63,14 @@ class LevelManagementTest extends TestCase
         $response->assertSessionHasNoErrors();
         $this->assertDatabaseMissing('levels', ['id' => $level->id]);
     }
+
+    public function test_levels_pdf_page_is_accessible(): void
+    {
+        $admin = User::factory()->create(['role' => 'cellule_informatique']);
+
+        $response = $this->actingAs($admin)->get(route('levels.pdf'));
+
+        $response->assertOk();
+        $response->assertSee('Liste des niveaux');
+    }
 }

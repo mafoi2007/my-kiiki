@@ -4,7 +4,10 @@
 <div class="row g-4">
     <div class="col-12 d-flex justify-content-between align-items-center">
         <h4 class="mb-0">Gestion des niveaux</h4>
-        <a class="btn btn-outline-secondary" href="{{ route('classes.index') }}">Retour aux classes</a>
+        <div class="d-flex gap-2">
+            <a class="btn btn-outline-primary" href="{{ route('levels.pdf') }}">Exporter PDF</a>
+            <a class="btn btn-outline-secondary" href="{{ route('classes.index') }}">Retour aux classes</a>
+        </div>
     </div>
 
     @if($errors->any())

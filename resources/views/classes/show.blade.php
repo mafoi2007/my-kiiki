@@ -3,7 +3,10 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-3">
     <h4 class="mb-0">Classe {{ $class->name }} ({{ $class->code }}) - {{ $class->level?->name }}</h4>
-    <a class="btn btn-outline-secondary" href="{{ route('classes.index') }}">Retour</a>
+    <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary" href="{{ route('dashboard') }}">Retour au menu principal</a>
+        <a class="btn btn-outline-primary" href="{{ route('classes.index') }}">Retour aux classes</a>
+    </div>
 </div>
 
 @if ($errors->any())
