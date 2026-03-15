@@ -48,8 +48,11 @@ Route::middleware(['auth', 'force_password_change'])->group(function (): void {
 
         Route::get('/utilisateurs', [UserController::class, 'index'])->name('users.index');
         Route::post('/utilisateurs', [UserController::class, 'store'])->name('users.store');
+        Route::get('/utilisateurs/{user}', [UserController::class, 'show'])->name('users.show');
+        Route::get('/utilisateurs/{user}/editer', [UserController::class, 'edit'])->name('users.edit');
+        Route::put('/utilisateurs/{user}', [UserController::class, 'update'])->name('users.update');
+        Route::delete('/utilisateurs/{user}', [UserController::class, 'destroy'])->name('users.destroy');
         Route::post('/utilisateurs/{user}/reinitialiser-mot-de-passe', [UserController::class, 'resetPassword'])->name('users.password.reset');
-        Route::patch('/utilisateurs/{user}/nom', [UserController::class, 'updateName'])->name('users.name.update');
         
         Route::get('/eleves', [StudentController::class, 'index'])->name('students.index');
         Route::post('/eleves', [StudentController::class, 'store'])->name('students.store');
