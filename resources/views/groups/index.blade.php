@@ -5,6 +5,11 @@
     <div class="alert alert-danger"><ul class="mb-0">@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div>
 @endif
 
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h4 class="mb-0">Gestion des groupes</h4>
+    <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">← Retour au menu principal</a>
+</div>
+
 <div class="row g-4">
     <div class="col-md-4">
         <div class="card shadow-sm"><div class="card-body">
@@ -18,14 +23,22 @@
     <div class="col-md-8">
         <div class="card shadow-sm"><div class="card-body">
             <h5>Liste des groupes</h5>
-            <table class="table">
+            <table class="table align-middle">
                 @forelse($groups as $group)
                     <tr>
-                        <td>{{ $group->name }}</td>
+                        <td>
+                            <form method="post" action="{{ route('groups.update', $group) }}" class="d-flex gap-2">@csrf @method('put')
+                                <input name="name" value="{{ $group->name }}" class="form-control" required>
+                                <button class="btn btn-sm btn-outline-primary">Modifier</button>
+                            </form>
+                        </td>
                         <td class="text-end">
                             <form method="post" action="{{ route('groups.destroy', $group) }}">@csrf @method('delete')
-                                <button class="btn btn-sm btn-outline-danger">Supprimer</button>
+                                <button class="btn btn-sm btn-outline-danger" @disabled($group->classes_count > 0)>Supprimer</button>
                             </form>
+                            @if($group->classes_count > 0)
+                                <small class="text-muted d-block">Déjà affecté à une matière en classe</small>
+                            @endif
                         </td>
                     </tr>
                 @empty

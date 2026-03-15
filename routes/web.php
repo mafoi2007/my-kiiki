@@ -44,6 +44,7 @@ Route::middleware(['auth', 'force_password_change'])->group(function (): void {
 
         Route::get('/groupes', [GroupController::class, 'index'])->name('groups.index');
         Route::post('/groupes', [GroupController::class, 'store'])->name('groups.store');
+        Route::put('/groupes/{group}', [GroupController::class, 'update'])->name('groups.update');
         Route::delete('/groupes/{group}', [GroupController::class, 'destroy'])->name('groups.destroy');
 
         Route::get('/utilisateurs', [UserController::class, 'index'])->name('users.index');
