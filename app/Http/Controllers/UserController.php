@@ -22,8 +22,12 @@ class UserController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'login' => ['required', 'string', 'max:100', 'alpha_dash', 'unique:users,login'],
             'role' => ['required', Rule::in(User::ROLES)],
+            'email' => ['nullable', 'email', 'max:255', 'unique:users,email'],
+            'phone' => ['nullable', 'string', 'max:30'],
             'password' => ['nullable', 'string', 'min:8'],
         ]);
+
+        $data['name'] = mb_strtoupper(trim($data['name']));
         
         $defaultPassword = $data['login'] . '@1234';
         $rawPassword = $data['password'] ?: $defaultPassword;
@@ -56,5 +60,18 @@ class UserController extends Controller
         ])->save();
 
         return back()->with('success', 'Mot de passe réinitialisé pour ' . $user->login . ' : ' . $defaultPassword); 
+    }
+
+    public function updateName(Request $request, User $user): RedirectResponse
+    {
+        $data = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+        ]);
+
+        $user->update([
+            'name' => mb_strtoupper(trim($data['name'])),
+        ]);
+
+        return back()->with('success', 'Nom mis à jour pour ' . $user->login . '.');
     }
 }
