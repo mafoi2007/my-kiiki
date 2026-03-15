@@ -19,12 +19,17 @@ class UserManagementTest extends TestCase
             'name' => 'Prof Test',
             'login' => 'prof_test',
             'role' => 'enseignant',
+            'email' => 'prof@test.ecole',
+            'phone' => '+2250701020304',
             'password' => '',
         ]);
 
         $response->assertSessionHasNoErrors();
 
         $teacher = User::where('login', 'prof_test')->firstOrFail();
+        $this->assertSame('PROF TEST', $teacher->name);
+        $this->assertSame('prof@test.ecole', $teacher->email);
+        $this->assertSame('+2250701020304', $teacher->phone);
         $this->assertTrue(Hash::check('prof_test@1234', $teacher->password));
         $this->assertTrue($teacher->must_change_password);
     }
@@ -45,5 +50,23 @@ class UserManagementTest extends TestCase
          $teacher->refresh();
         $this->assertTrue(Hash::check('ens_amine@1234', $teacher->password));
         $this->assertTrue($teacher->must_change_password);
+    }
+
+    public function test_cellule_informatique_can_update_user_name_and_it_is_saved_in_uppercase(): void
+    {
+        $admin = User::factory()->create(['role' => 'cellule_informatique']);
+        $teacher = User::factory()->create([
+            'role' => 'enseignant',
+            'name' => 'Nom Initial',
+        ]);
+
+        $response = $this->actingAs($admin)->patch(route('users.name.update', $teacher), [
+            'name' => 'nouveau nom',
+        ]);
+
+        $response->assertSessionHasNoErrors();
+
+        $teacher->refresh();
+        $this->assertSame('NOUVEAU NOM', $teacher->name);
     }
 }
