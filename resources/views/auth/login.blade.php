@@ -12,8 +12,14 @@
         <div class="col-lg-5 col-md-7">
             <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
                 <div class="card-header bg-primary text-white py-4">
-                    <h4 class="mb-1">Connexion à la plateforme</h4>
-                    <small class="opacity-75">Gestion scolaire - Secondaire Notes</small>
+                    <div class="d-flex align-items-center gap-3 mb-3">
+                        <img src="{{ asset('images/richapp-logo.svg') }}" alt="Logo RichApp" width="44" height="44" class="rounded-3 bg-white p-1 shadow-sm">
+                        <div>
+                            <strong class="d-block fs-5">RichApp</strong>
+                            <small class="opacity-75">Gestion scolaire - Secondaire Notes</small>
+                        </div>
+                    </div>
+                    <h4 class="mb-0">Connexion à la plateforme</h4>
                 </div>
                 <div class="card-body p-4 p-lg-5">
                     <form method="post" action="{{ route('login.attempt') }}" class="vstack gap-3">

@@ -21,7 +21,10 @@
 <body class="bg-body-tertiary min-vh-100 d-flex flex-column">
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
-        <a class="navbar-brand" href="{{ route('dashboard') }}">{{ config('app.name') }}</a>
+        <a class="navbar-brand d-flex align-items-center gap-2" href="{{ route('dashboard') }}">
+            <img src="{{ asset('images/richapp-logo.svg') }}" alt="Logo RichApp" width="34" height="34" class="rounded-2 bg-white p-1">
+            <span>{{ config('app.name') }}</span>
+        </a>
         <div class="ms-auto d-flex gap-2 align-items-center text-white">
             <span>{{ auth()->user()->name }} ({{ auth()->user()->role }})</span>
             <form method="post" action="{{ route('logout') }}">

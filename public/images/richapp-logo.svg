@@ -1,0 +1,26 @@
+<svg width="220" height="220" viewBox="0 0 220 220" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Logo RichApp</title>
+  <desc id="desc">Un livre stylisé avec la lettre R au centre.</desc>
+  <defs>
+    <linearGradient id="bg" x1="30" y1="24" x2="188" y2="196" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0D6EFD"/>
+      <stop offset="1" stop-color="#0B5ED7"/>
+    </linearGradient>
+    <linearGradient id="book" x1="52" y1="54" x2="168" y2="164" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ffffff" stop-opacity="0.98"/>
+      <stop offset="1" stop-color="#E7F1FF"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="20" y="20" width="180" height="180" rx="42" fill="url(#bg)"/>
+
+  <path d="M56 66C74 57.5 90.5 56 108 62V157C90.5 151 74 152.5 56 161V66Z" fill="url(#book)"/>
+  <path d="M164 66C146 57.5 129.5 56 112 62V157C129.5 151 146 152.5 164 161V66Z" fill="url(#book)"/>
+  <path d="M110 62V157" stroke="#CFE2FF" stroke-width="4"/>
+
+  <path d="M83 136V88H106.5C114.5 88 121 94.5 121 102.5C121 110.5 114.5 117 106.5 117H95.5V136H83Z" fill="#0D6EFD"/>
+  <rect x="95.5" y="102" width="11" height="4" rx="2" fill="#fff"/>
+  <path d="M122 136L112 118.5H124.8L136 136H122Z" fill="#0D6EFD"/>
+
+  <circle cx="170" cy="48" r="10" fill="#FFD43B"/>
+</svg>
