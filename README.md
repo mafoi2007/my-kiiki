@@ -16,7 +16,8 @@ Cette application implémente une base fonctionnelle pour un établissement seco
 
 - Un enseignant peut avoir plusieurs affectations.
 - Dans une classe, une matière n'a qu'un seul enseignant (`teacher_assignments` unique sur `school_class_id + subject_id`).
-- Jusqu'à 6 évaluations par classe (modélisées via `evaluations.sequence_number`).
+- Une année scolaire comporte 6 séquences et 3 trimestres (2 séquences par trimestre).
+- La Cellule informatique peut définir/activer les séquences pour autoriser la saisie des notes des enseignants.
 - Notes séquentielles/trimestrielles/annuelles modélisables via `grades` + agrégations.
 
 ## Installation
@@ -38,4 +39,8 @@ Créé par le seeder:
 
 ## Stack UI
 
-- Blade + Bootstrap 5 (CDN) pour une interface simple et propre.
+Blade + Bootstrap 5 (CDN) pour une interface simple et propre.
+
+## Licence
+
+MIT

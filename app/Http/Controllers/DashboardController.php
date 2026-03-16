@@ -26,10 +26,8 @@ class DashboardController extends Controller
 
             return view('dashboard.index', [
                 'stats' => [
-                    'Utilisateurs' => User::count(),
                     'Classes tenues' => $assignedClassIds->count(),
                     'Matières tenues' => $assignedSubjectIds->count(),
-                    'Groupes' => Group::count(),
                     'Élèves tenus' => Student::query()->whereIn('school_class_id', $assignedClassIds)->count(),
                 ],
             ]);

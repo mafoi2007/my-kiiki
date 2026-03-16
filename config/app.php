@@ -16,7 +16,12 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'RichApp'),
+
+    'version' => env('APP_VERSION', '1.0.0'),
+
+    'license' => env('APP_LICENSE', 'MIT'),
+
 
     /*
     |--------------------------------------------------------------------------

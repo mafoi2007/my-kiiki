@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ClassController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EvaluationController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\MessageController;
@@ -40,6 +41,9 @@ Route::middleware(['auth', 'force_password_change'])->group(function (): void {
         Route::post('/niveaux', [LevelController::class, 'store'])->name('levels.store');
         Route::put('/niveaux/{level}', [LevelController::class, 'update'])->name('levels.update');
         Route::delete('/niveaux/{level}', [LevelController::class, 'destroy'])->name('levels.destroy');
+        Route::get('/sequences', [EvaluationController::class, 'index'])->name('evaluations.index');
+        Route::post('/sequences', [EvaluationController::class, 'store'])->name('evaluations.store');
+        Route::put('/sequences/{evaluation}', [EvaluationController::class, 'update'])->name('evaluations.update');
         Route::get('/matieres', [SubjectController::class, 'index'])->name('subjects.index');
         Route::post('/matieres', [SubjectController::class, 'store'])->name('subjects.store');
         Route::put('/matieres/{subject}', [SubjectController::class, 'update'])->name('subjects.update');

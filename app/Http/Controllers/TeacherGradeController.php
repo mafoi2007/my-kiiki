@@ -35,6 +35,7 @@ class TeacherGradeController extends Controller
         $students = collect();
         $evaluation = null;
         $grades = collect();
+        $trimesterAverageByStudent = collect();
 
         if ($selectedSequence > 0) {
             $classes = SchoolClass::query()
@@ -91,6 +92,28 @@ class TeacherGradeController extends Controller
                     ->whereIn('student_id', $students->pluck('id'))
                     ->get()
                     ->keyBy('student_id');
+
+
+                    $trimesterAverageByStudent = collect();
+                $trimesterSequences = $this->trimesterSequences($evaluation->sequence_number);
+
+                if ($trimesterSequences !== null) {
+                    $trimesterEvaluationIds = Evaluation::query()
+                        ->where('school_class_id', $selectedClassId)
+                        ->whereIn('sequence_number', $trimesterSequences)
+                        ->pluck('id');
+
+                    if ($trimesterEvaluationIds->isNotEmpty()) {
+                        $trimesterAverageByStudent = Grade::query()
+                            ->selectRaw('student_id, AVG(score) as trimester_average')
+                            ->whereIn('evaluation_id', $trimesterEvaluationIds)
+                            ->where('subject_id', $selectedSubjectId)
+                            ->whereIn('student_id', $students->pluck('id'))
+                            ->groupBy('student_id')
+                            ->get()
+                            ->keyBy('student_id');
+                    }
+                }
             }
         }
 
@@ -104,6 +127,7 @@ class TeacherGradeController extends Controller
             'selectedSequence' => $selectedSequence,
             'selectedClassId' => $selectedClassId,
             'selectedSubjectId' => $selectedSubjectId,
+            'trimesterAverageByStudent' => $trimesterAverageByStudent,
         ]);
     }
 
@@ -155,6 +179,16 @@ class TeacherGradeController extends Controller
         $grade->delete();
 
         return back()->with('success', 'Note supprimée.');
+    }
+
+    private function trimesterSequences(int $sequenceNumber): ?array
+    {
+        return match ($sequenceNumber) {
+            1, 2 => [1, 2],
+            3, 4 => [3, 4],
+            5, 6 => [5, 6],
+            default => null,
+        };
     }
 
     private function validateGradeRequest(Request $request): array

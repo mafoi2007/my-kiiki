@@ -45,7 +45,8 @@
 @if($evaluation && $selectedSubjectId > 0)
     <div class="card shadow-sm">
         <div class="card-body">
-            <h5 class="mb-3">Formulaire de saisie - Séquence {{ $evaluation->sequence_number }}</h5>
+            <h5 class="mb-2">Formulaire de saisie - Séquence {{ $evaluation->sequence_number }}</h5>
+            <p class="text-muted small mb-3">La note trimestrielle est calculée par matière avec la formule : (note séquence 1 + note séquence 2) / 2.</p>
             @if($students->isEmpty())
                 <p class="text-muted mb-0">Aucun élève trouvé pour cette classe.</p>
             @else
@@ -53,6 +54,7 @@
                     <tr>
                         <th>Élève</th>
                         <th style="width: 220px;">Note / 20</th>
+                         <th>Note trimestrielle / 20</th>
                         <th class="text-end">Actions</th>
                     </tr>
                     @foreach($students as $student)
@@ -73,6 +75,11 @@
                                     <button class="btn btn-sm btn-primary">{{ $grade ? 'Modifier' : 'Enregistrer' }}</button>
                                 </form>
                             </td>
+                            <td>
+                                @php($trimesterAverage = data_get($trimesterAverageByStudent->get($student->id), 'trimester_average'))
+                                {{ $trimesterAverage !== null ? number_format((float) $trimesterAverage, 2) : '—' }}
+                            </td>
+
                             <td class="text-end">
                                 @if($grade)
                                     <form method="post" action="{{ route('teacher.grades.destroy', $grade) }}">

@@ -93,6 +93,9 @@ class DashboardTeacherStatsTest extends TestCase
         $response->assertSee('<div class="fs-3 fw-bold">2</div>', false);
         $response->assertSee('<div class="text-muted">Matières tenues</div>', false);
         $response->assertSee('<div class="text-muted">Élèves tenus</div>', false);
+        $response->assertDontSee('Utilisateurs');
+        $response->assertDontSee('Groupes');
+
         $response->assertDontSee('Nombre total de classes');
     }
 }
