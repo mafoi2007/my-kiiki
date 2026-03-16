@@ -25,8 +25,11 @@
 
                 <label class="form-label required-label" for="school_class_id">Classe</label>
                 <select id="school_class_id" name="school_class_id" class="form-select mb-2" required>
+                    <option value="" @selected(old('school_class_id') === null)>Selectionner classe</option>
                     @foreach($classes as $class)
-                        <option value="{{ $class->id }}" @selected((int) old('school_class_id') === $class->id)>{{ $class->name }}</option>
+                        <option value="{{ $class->id }}" @selected((int) old('school_class_id') === $class->id)>
+                            {{ $class->level?->name ? $class->level->name.' - ' : '' }}{{ $class->name }}
+                        </option>
                     @endforeach
                 </select>
 

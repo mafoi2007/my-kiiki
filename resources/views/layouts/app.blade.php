@@ -18,7 +18,7 @@
         }
     </style>
 </head>
-<body class="bg-body-tertiary">
+<body class="bg-body-tertiary min-vh-100 d-flex flex-column">
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
     <div class="container">
         <a class="navbar-brand" href="{{ route('dashboard') }}">Secondaire Notes</a>
@@ -31,7 +31,7 @@
         </div>
     </div>
 </nav>
-<div class="container py-4">
+<main class="container py-4 flex-grow-1">
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert" data-auto-dismiss="5000">
             {{ session('success') }}
@@ -50,7 +50,8 @@
     @endif
     
     @yield('content')
-</div>
+</main>
+@include('components.footer')
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         document.querySelectorAll('[data-auto-dismiss]').forEach((alertElement) => {

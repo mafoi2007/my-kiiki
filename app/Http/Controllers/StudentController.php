@@ -57,7 +57,13 @@ class StudentController extends Controller
             : null;
 
         return view('students.index', [
-            'classes' => SchoolClass::orderBy('name')->get(),
+            'classes' => SchoolClass::query()
+                ->with('level')
+                ->leftJoin('levels', 'school_classes.level_id', '=', 'levels.id')
+                ->select('school_classes.*')
+                ->orderBy('levels.name')
+                ->orderBy('school_classes.name')
+                ->get(),
             'classesWithStudents' => $classes,
             'selectedClass' => $selectedClass,
             'studentsInSelectedClass' => $studentsInSelectedClass,

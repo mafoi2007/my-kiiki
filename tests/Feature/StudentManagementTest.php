@@ -137,6 +137,30 @@ class StudentManagementTest extends TestCase
         ]);
     }
 
+
+
+    public function test_create_student_form_lists_classes_by_level_then_name_with_default_option(): void
+    {
+        $admin = User::factory()->create(['role' => 'cellule_informatique']);
+
+        $levelSixieme = \App\Models\Level::create(['name' => '6eme']);
+        $levelCinquieme = \App\Models\Level::create(['name' => '5eme']);
+
+        SchoolClass::create(['name' => 'B', 'code' => '6B', 'level_id' => $levelSixieme->id]);
+        SchoolClass::create(['name' => 'A', 'code' => '6A', 'level_id' => $levelSixieme->id]);
+        SchoolClass::create(['name' => 'C', 'code' => '5C', 'level_id' => $levelCinquieme->id]);
+
+        $response = $this->actingAs($admin)->get(route('students.index'));
+
+        $response->assertOk();
+        $response->assertSee('Selectionner classe');
+        $response->assertSeeInOrder([
+            '5eme - C',
+            '6eme - A',
+            '6eme - B',
+        ]);
+    }
+
     public function test_index_displays_only_classes_that_have_students(): void
     {
         $admin = User::factory()->create(['role' => 'cellule_informatique']);

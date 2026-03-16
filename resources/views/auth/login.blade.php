@@ -6,8 +6,8 @@
     <title>Connexion</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body class="bg-body-tertiary">
-<div class="container py-5">
+<body class="bg-body-tertiary min-vh-100 d-flex flex-column">
+<main class="container py-5 flex-grow-1">
     <div class="row justify-content-center align-items-center min-vh-100 py-4">
         <div class="col-lg-5 col-md-7">
             <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
@@ -34,6 +34,7 @@
             </div>
         </div>
     </div>
-</div>
+</main>
+@include('components.footer')
 </body>
 </html>
