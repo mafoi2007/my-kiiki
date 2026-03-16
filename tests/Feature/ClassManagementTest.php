@@ -15,6 +15,48 @@ class ClassManagementTest extends TestCase
 {
     use RefreshDatabase;
 
+    public function test_classes_are_sorted_by_level_and_name_with_pagination(): void
+    {
+        $admin = User::factory()->create(['role' => 'cellule_informatique']);
+        $levelA = Level::create(['name' => '1er Cycle']);
+        $levelB = Level::create(['name' => '2nd Cycle']);
+
+        for ($i = 1; $i <= 11; $i++) {
+            SchoolClass::create([
+                'name' => sprintf('Classe %02d', $i),
+                'code' => sprintf('C%02d', $i),
+                'level_id' => $levelB->id,
+            ]);
+        }
+
+        SchoolClass::create([
+            'name' => 'Alpha',
+            'code' => 'A1',
+            'level_id' => $levelA->id,
+        ]);
+
+        $response = $this->actingAs($admin)->get(route('classes.index'));
+
+        $response->assertOk();
+        $response->assertSee('Alpha');
+        $response->assertDontSee('Classe 11');
+    }
+
+    public function test_classes_can_be_filtered_by_search_term(): void
+    {
+        $admin = User::factory()->create(['role' => 'cellule_informatique']);
+        $level = Level::create(['name' => '6eme']);
+
+        SchoolClass::create(['name' => '6e A', 'code' => '6A', 'level_id' => $level->id]);
+        SchoolClass::create(['name' => '5e B', 'code' => '5B', 'level_id' => $level->id]);
+
+        $response = $this->actingAs($admin)->get(route('classes.index', ['search' => '6e']));
+
+        $response->assertOk();
+        $response->assertSee('6e A');
+        $response->assertDontSee('5e B');
+    }
+
     public function test_class_with_students_cannot_be_deleted(): void
     {
         $admin = User::factory()->create(['role' => 'cellule_informatique']);

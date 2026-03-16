@@ -10,16 +10,6 @@
     </div>
 </div>
 
-@if ($errors->any())
-    <div class="alert alert-danger">
-        <ul class="mb-0">
-            @foreach($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-
 <div class="row g-4">
     <div class="col-md-4">
         <div class="card shadow-sm"><div class="card-body">
@@ -39,10 +29,17 @@
     </div>
     <div class="col-md-8">
         <div class="card shadow-sm"><div class="card-body">
-            <h5>Liste des classes</h5>
-             <table class="table align-middle">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="mb-0">Liste des classes</h5>
+                <form method="get" class="d-flex gap-2">
+                    <input type="search" name="search" class="form-control" placeholder="Rechercher une classe..." value="{{ $search }}">
+                    <button class="btn btn-outline-primary">Recherche</button>
+                </form>
+            </div>
+
+            <table class="table align-middle">
                 <tr><th>Nom</th><th>Code</th><th>Niveau</th><th>Élèves</th><th>Actions</th></tr>
-                @foreach($classes as $class)
+                 @forelse($classes as $class)
                 <tr>
                     <td>{{ $class->name }}</td>
                     <td>{{ $class->code }}</td>
@@ -71,8 +68,14 @@
                         </form>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">Aucune classe trouvée.</td>
+                    </tr>
+                @endforelse
             </table>
+
+            {{ $classes->links() }}
         </div></div>
     </div>
 </div>

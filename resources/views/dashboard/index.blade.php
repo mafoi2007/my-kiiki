@@ -45,7 +45,7 @@
             @endif
 
             @if(auth()->user()->isRole('enseignant'))
-                <span class="badge bg-dark fs-6">Saisie des notes des classes attribuées.</span>
+                <a class="btn btn-dark" href="{{ route('teacher.grades.index') }}">Saisie des notes</a>
             @endif
 
             @if(auth()->user()->isRole('parent'))

@@ -7,6 +7,7 @@ use App\Http\Controllers\GroupController;
 use App\Http\Controllers\LevelController;
 use App\Http\Controllers\MessageController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\TeacherGradeController;
 use App\Http\Controllers\SubjectController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -63,6 +64,13 @@ Route::middleware(['auth', 'force_password_change'])->group(function (): void {
         Route::put('/eleves/{student}/changer-classe', [StudentController::class, 'moveClass'])->name('students.move-class');
         Route::get('/eleves/classes/{class}/pdf', [StudentController::class, 'classStudentsPdf'])->name('students.class.pdf');
         Route::delete('/eleves/{student}', [StudentController::class, 'destroy'])->name('students.destroy');
+    });
+
+    Route::middleware('role:enseignant')->group(function (): void {
+        Route::get('/enseignant/notes', [TeacherGradeController::class, 'index'])->name('teacher.grades.index');
+        Route::post('/enseignant/notes', [TeacherGradeController::class, 'store'])->name('teacher.grades.store');
+        Route::put('/enseignant/notes/{grade}', [TeacherGradeController::class, 'update'])->name('teacher.grades.update');
+        Route::delete('/enseignant/notes/{grade}', [TeacherGradeController::class, 'destroy'])->name('teacher.grades.destroy');
     });
 
     Route::middleware('role:parent')->get('/messages', [MessageController::class, 'index'])->name('messages.index'); 

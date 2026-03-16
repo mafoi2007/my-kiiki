@@ -7,28 +7,16 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Student extends Model
+class Evaluation extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['school_class_id', 'sequence_number', 'starts_at', 'ends_at', 'is_open'];
 
-     protected $casts = [
-        'birth_date' => 'date',
-        'active' => 'boolean',
-    ];
-    protected $fillable = [
-        'matricule',
-        'school_matricule',
-        'full_name',
-        'birth_date',
-        'birth_place',
-        'school_class_id',
-        'status',
-        'sex',
-        'father_name',
-        'mother_name',
-        'photo_path',
-        'active',
+    protected $casts = [
+        'starts_at' => 'date',
+        'ends_at' => 'date',
+        'is_open' => 'boolean',
     ];
 
     public function schoolClass(): BelongsTo

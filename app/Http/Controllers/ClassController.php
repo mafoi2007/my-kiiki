@@ -15,11 +15,32 @@ use Illuminate\View\View;
 
 class ClassController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
+        $search = trim((string) $request->query('search', ''));
+
+        $classes = SchoolClass::query()
+            ->with(['level', 'students'])
+            ->withCount('subjects')
+            ->leftJoin('levels', 'school_classes.level_id', '=', 'levels.id')
+            ->select('school_classes.*')
+            ->when($search !== '', function ($query) use ($search): void {
+                $query->where(function ($innerQuery) use ($search): void {
+                    $innerQuery
+                        ->where('school_classes.name', 'like', "%{$search}%")
+                        ->orWhere('school_classes.code', 'like', "%{$search}%")
+                        ->orWhere('levels.name', 'like', "%{$search}%");
+                });
+            })
+            ->orderBy('levels.name')
+            ->orderBy('school_classes.name')
+            ->paginate(10)
+            ->withQueryString();
+
         return view('classes.index', [
-            'classes' => SchoolClass::with(['level', 'students'])->withCount('subjects')->latest()->get(),
+            'classes' => $classes,
             'levels' => Level::orderBy('name')->get(),
+             'search' => $search,
         ]);
     }
 
